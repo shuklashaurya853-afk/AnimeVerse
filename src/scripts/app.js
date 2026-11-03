@@ -8,7 +8,10 @@ const AnimeVerse = {
         popular: [],
         seasonal: [],
         searchController: null,
-        searchTimer: null
+        searchTimer: null,
+        searchQuery: "",
+        searchPage: 1,
+        searchTotalPages: 1
     },
 
     init() {
@@ -23,6 +26,7 @@ const AnimeVerse = {
         document.querySelector("#navbar").innerHTML = `
             <nav class="navbar">
                 <a href="#home" class="logo">Anime<span>Verse</span></a>
+
                 <div class="nav-links">
                     <a href="#home">Home</a>
                     <a href="#trending">Trending</a>
@@ -30,8 +34,12 @@ const AnimeVerse = {
                     <a href="#seasonal">Seasonal</a>
                     <a href="#news">News</a>
                 </div>
-                <input type="search" id="anime-search"
-                    placeholder="Search anime..." aria-label="Search anime">
+
+                <input
+                    type="search"
+                    id="anime-search"
+                    placeholder="Search anime..."
+                    aria-label="Search anime">
             </nav>
         `;
     },
@@ -41,8 +49,13 @@ const AnimeVerse = {
             <div class="hero-content" id="home">
                 <p class="eyebrow">WELCOME TO THE ANIME UNIVERSE</p>
                 <h1>Discover Your Next <span>Anime Adventure.</span></h1>
-                <p>Explore anime, discover new stories and experience the world of Japanese animation.</p>
-                <a href="#trending" class="hero-button">Explore Anime →</a>
+                <p>
+                    Explore anime, discover new stories and experience
+                    the world of Japanese animation.
+                </p>
+                <a href="#trending" class="hero-button">
+                    Explore Anime →
+                </a>
             </div>
         `;
     },
@@ -55,7 +68,9 @@ const AnimeVerse = {
     },
 
     bindSearch() {
-        document.querySelector("#anime-search").addEventListener("input", event => {
+        const input = document.querySelector("#anime-search");
+
+        input.addEventListener("input", event => {
             clearTimeout(this.state.searchTimer);
 
             const query = event.target.value.trim();
@@ -65,9 +80,27 @@ const AnimeVerse = {
                 return;
             }
 
-            this.state.searchTimer = setTimeout(
-                () => this.searchAnime(query), 700
-            );
+            this.state.searchQuery = query;
+            this.state.searchPage = 1;
+
+            this.state.searchTimer = setTimeout(() => {
+                this.searchAnime(query, 1);
+            }, 700);
+        });
+
+        document.addEventListener("click", event => {
+            const button = event.target.closest("[data-search-page]");
+            if (!button || button.disabled) return;
+
+            const page = Number(button.dataset.searchPage);
+
+            if (
+                !Number.isInteger(page) ||
+                page < 1 ||
+                page > this.state.searchTotalPages
+            ) return;
+
+            this.searchAnime(this.state.searchQuery, page);
         });
     },
 
@@ -109,6 +142,7 @@ const AnimeVerse = {
         for (const item of sections) {
             try {
                 const result = await this.request(item.endpoint);
+
                 this.state[item.state] = result.data || [];
 
                 this.renderAnimeSection(
@@ -122,35 +156,53 @@ const AnimeVerse = {
         }
     },
 
-    async searchAnime(query) {
-        if (this.state.searchController) {
-            this.state.searchController.abort();
-        }
+    async searchAnime(query, page = 1) {
+        if (!query) return;
+
+        this.state.searchController?.abort();
 
         const controller = new AbortController();
         this.state.searchController = controller;
 
         const section = document.querySelector("#search-results");
+
         section.hidden = false;
         section.innerHTML = "<p>Searching anime...</p>";
 
         try {
+            const params = new URLSearchParams({
+                q: query,
+                limit: "24",
+                page: String(page),
+                sfw: "true"
+            });
+
             const result = await this.request(
-                `/anime?q=${encodeURIComponent(query)}&limit=24`,
+                `/anime?${params.toString()}`,
                 controller.signal
             );
 
             if (this.state.searchController !== controller) return;
 
+            this.state.searchPage = page;
+            this.state.searchTotalPages =
+                result.pagination?.last_visible_page || 1;
+
             this.renderAnimeSection(
                 "search-results",
-                "Search Results",
+                `Search Results: ${query}`,
                 result.data || []
             );
 
             if (!result.data?.length) {
-                section.innerHTML = "<p>No anime found. Try another title.</p>";
+                section.innerHTML = `
+                    <p>No anime found. Try another title.</p>
+                `;
+                return;
             }
+
+            this.renderPagination();
+
         } catch (error) {
             if (error.name !== "AbortError") {
                 this.showError("search-results", error.message);
@@ -158,11 +210,57 @@ const AnimeVerse = {
         }
     },
 
+    renderPagination() {
+        const section = document.querySelector("#search-results");
+
+        if (!section) return;
+
+        const oldPagination = section.querySelector(".search-pagination");
+        oldPagination?.remove();
+
+        const current = this.state.searchPage;
+        const total = this.state.searchTotalPages;
+
+        if (total <= 1) return;
+
+        const pagination = document.createElement("div");
+        pagination.className = "search-pagination";
+
+        pagination.innerHTML = `
+            <button
+                type="button"
+                data-search-page="${current - 1}"
+                ${current <= 1 ? "disabled" : ""}>
+                ← Previous
+            </button>
+
+            <span>
+                Page ${current} of ${total}
+            </span>
+
+            <button
+                type="button"
+                data-search-page="${current + 1}"
+                ${current >= total ? "disabled" : ""}>
+                Next →
+            </button>
+        `;
+
+        section.appendChild(pagination);
+    },
+
     clearSearch() {
+        clearTimeout(this.state.searchTimer);
+
         this.state.searchController?.abort();
         this.state.searchController = null;
 
+        this.state.searchQuery = "";
+        this.state.searchPage = 1;
+        this.state.searchTotalPages = 1;
+
         const section = document.querySelector("#search-results");
+
         section.hidden = true;
         section.innerHTML = "";
     },
@@ -180,9 +278,14 @@ const AnimeVerse = {
 
             <div class="anime-grid">
                 ${animeList.map(anime => `
-                    <article class="anime-card"
+                    <article
+                        class="anime-card"
                         data-anime-id="${Number(anime.mal_id)}"
-                        tabindex="0" role="button"
+                        data-score="${Number(anime.score) || 0}"
+                        data-popularity="${Number(anime.popularity) || 999999}"
+                        data-title="${this.escape(anime.title).toLowerCase()}"
+                        tabindex="0"
+                        role="button"
                         aria-label="View ${this.escape(anime.title)} details">
 
                         <img
@@ -192,12 +295,19 @@ const AnimeVerse = {
 
                         <div class="anime-info">
                             <h3>${this.escape(anime.title)}</h3>
-                            <p>⭐ ${anime.score ?? "N/A"} · ${this.escape(anime.type || "Anime")}</p>
+                            <p>
+                                ⭐ ${anime.score ?? "N/A"}
+                                · ${this.escape(anime.type || "Anime")}
+                            </p>
                         </div>
                     </article>
                 `).join("")}
             </div>
         `;
+
+        if (window.AnimeLayout) {
+            AnimeLayout.refresh(section);
+        }
     },
 
     showError(id, message) {
@@ -207,6 +317,7 @@ const AnimeVerse = {
         section.innerHTML = `
             <p>Unable to load this section. Please try again later.</p>
         `;
+
         console.error(message);
     },
 
@@ -221,4 +332,6 @@ const AnimeVerse = {
     }
 };
 
-document.addEventListener("DOMContentLoaded", () => AnimeVerse.init());
+document.addEventListener("DOMContentLoaded", () => {
+    AnimeVerse.init();
+});

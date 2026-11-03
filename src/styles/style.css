@@ -484,3 +484,378 @@ a {
 .news-card a:hover {
     text-decoration: underline;
 }
+
+
+
+/* Anime Grid and List Controls */
+.anime-view-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.view-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.view-buttons button,
+.anime-sort {
+    background: #171522;
+    color: #eee9fa;
+    border: 1px solid #39334b;
+    border-radius: 9px;
+    padding: 9px 14px;
+    cursor: pointer;
+}
+
+.view-buttons button.active {
+    background: #7652d8;
+    border-color: #7652d8;
+    color: #fff;
+}
+
+.anime-grid.list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.anime-grid.list-view .anime-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    min-height: 120px;
+}
+
+.anime-grid.list-view .anime-card img {
+    width: 85px;
+    height: 115px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.anime-grid.list-view .anime-info {
+    padding: 12px;
+}
+
+.anime-sort:focus-visible,
+.view-buttons button:focus-visible {
+    outline: 2px solid #a78bfa;
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .anime-view-controls {
+        align-items: stretch;
+    }
+
+    .anime-sort {
+        width: 100%;
+    }
+}
+
+
+
+/* Advanced Surprise Me */
+#surprise-me {
+    margin: 50px 0;
+}
+
+.surprise-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 22px;
+    border: 1px solid #302b40;
+    border-radius: 16px;
+    background: #151320;
+}
+
+.surprise-panel label {
+    align-self: end;
+    color: #c9c1dc;
+    font-size: 13px;
+}
+
+.surprise-panel select {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    color: #fff;
+    background: #211d2d;
+    border: 1px solid #403951;
+    border-radius: 9px;
+}
+
+#surprise-button,
+.surprise-card button {
+    grid-column: 1 / -1;
+    padding: 13px;
+    color: white;
+    background: #7652d8;
+    border: none;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#surprise-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#surprise-result {
+    margin-top: 20px;
+}
+
+.surprise-card {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #302b40;
+    border-radius: 15px;
+    background: #151320;
+}
+
+.surprise-card img {
+    width: 150px;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.surprise-card h3 {
+    color: #fff;
+    margin: 10px 0;
+}
+
+.surprise-card p {
+    color: #c2bbd0;
+    line-height: 1.6;
+}
+
+@media (max-width: 520px) {
+    .surprise-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .surprise-card {
+        flex-direction: column;
+    }
+
+    .surprise-card img {
+        width: 100%;
+        max-height: 280px;
+        object-fit: contain;
+    }
+}
+
+
+
+/* Global Search */
+#global-search {
+    margin: 35px 0;
+}
+
+.global-search-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 16px;
+    background: #151320;
+    border: 1px solid #302b40;
+    border-radius: 14px;
+}
+
+.global-search-controls input {
+    flex: 1;
+    min-width: 180px;
+    padding: 13px;
+    color: #fff;
+    background: #211d2d;
+    border: 1px solid #403951;
+    border-radius: 9px;
+}
+
+.global-search-controls select,
+.global-search-controls button {
+    padding: 12px 16px;
+    color: #fff;
+    background: #7652d8;
+    border: 1px solid #7652d8;
+    border-radius: 9px;
+}
+
+.global-search-controls select {
+    background: #211d2d;
+    border-color: #403951;
+}
+
+.global-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.global-result-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #151320;
+    border: 1px solid #302b40;
+    border-radius: 12px;
+    min-width: 0;
+}
+
+.global-result-card img {
+    width: 85px;
+    height: 115px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.global-result-card h3 {
+    color: #fff;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.global-result-card p {
+    color: #aaa4ba;
+    font-size: 12px;
+}
+
+.global-result-card button,
+.global-result-card a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #b69aff;
+    background: none;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    .global-search-controls {
+        flex-direction: column;
+    }
+
+    .global-search-controls input,
+    .global-search-controls select,
+    .global-search-controls button {
+        width: 100%;
+    }
+}
+
+
+
+/* Personal Watchlist */
+#watchlist {
+    margin: 50px 0;
+}
+
+.watchlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+}
+
+.watchlist-card {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    background: #151320;
+    border: 1px solid #302b40;
+    border-radius: 13px;
+    min-width: 0;
+}
+
+.watchlist-card img {
+    width: 90px;
+    height: 125px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.watchlist-info {
+    min-width: 0;
+}
+
+.watchlist-info h3 {
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 12px;
+    overflow-wrap: anywhere;
+}
+
+.watchlist-info select,
+.watchlist-info button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 9px;
+    color: #fff;
+    background: #211d2d;
+    border: 1px solid #403951;
+    border-radius: 8px;
+}
+
+.watchlist-info button {
+    background: #7652d8;
+    border-color: #7652d8;
+    cursor: pointer;
+}
+
+[data-watchlist-action] {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 9px 12px;
+    color: white;
+    background: #7652d8;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    .watchlist-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Search Pagination */
+.search-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 28px 0;
+}
+
+.search-pagination button {
+    padding: 11px 18px;
+    background: #7652d8;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.search-pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.search-pagination span {
+    color: #ddd8eb;
+    font-size: 14px;
+}
