@@ -859,3 +859,32 @@ a {
     color: #ddd8eb;
     font-size: 14px;
 }
+
+/* Search Pagination */
+.search-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 28px 0;
+}
+
+.search-pagination button {
+    padding: 11px 18px;
+    background: #7652d8;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.search-pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.search-pagination span {
+    color: #ddd8eb;
+    font-size: 14px;
+}
