@@ -407,3 +407,80 @@ a {
         grid-template-columns: 1fr;
     }
 }
+
+
+
+/* Anime News */
+.section-label {
+    color: #a78bfa;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.news-categories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 16px 0;
+}
+
+.news-categories button {
+    flex-shrink: 0;
+    padding: 9px 16px;
+    border: 1px solid #343044;
+    border-radius: 22px;
+    background: #171522;
+    color: #ddd8eb;
+    cursor: pointer;
+}
+
+.news-categories button.active {
+    background: #7652d8;
+    border-color: #7652d8;
+    color: white;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.news-card {
+    padding: 20px;
+    border: 1px solid #302b40;
+    border-radius: 14px;
+    background: #151320;
+}
+
+.news-tag {
+    color: #a78bfa;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.news-card h3 {
+    margin: 12px 0;
+    color: #fff;
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+.news-anime,
+.news-date {
+    color: #aaa4ba;
+    font-size: 13px;
+}
+
+.news-card a {
+    display: inline-block;
+    margin-top: 14px;
+    color: #b69aff;
+    text-decoration: none;
+}
+
+.news-card a:hover {
+    text-decoration: underline;
+}
